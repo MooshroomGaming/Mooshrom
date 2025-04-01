@@ -37,6 +37,6 @@ Welcome to the official Mooshromgaming website! Explore the latest content, purc
 Available for 1 month or 1 year, with options to gift multiple memberships.
 
 ## Social Media
-Follow us on [TikTok](https://www.tiktok.com/@mooshromgaming09?_t=8jtFcP6yVos&_r=1) and [Instagram](https://www.instagram.com
+Follow us on [TikTok](https://www.tiktok.com/@mooshromgaming09?_t=8jtFcP6yVos&_r=1) and [Instagram](https://www.instagram.com)
 
 
