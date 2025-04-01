@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mooshrom</title>
+    <style>
+        /* ===== Header Styles ===== */
+        body {
+            font-family: Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            margin: 0;
+        }
+        .dark-mode {
+            background: #222;
+            color: white;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            gap: 20px;
+        }
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-right: 10px;
+        }
+        .menu {
+            display: flex;
+            align-items: center;
+            margin-right: auto;
+            position: relative;
+            gap: 15px;
+        }
+        .menu button {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+            height: 40px;
+        }
+        .menu button:hover {
+            background: #555;
+        }
+        .menu-content {
+            display: none;
+            position: absolute;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 2;
+            top: 100%;
+            left: 0;
+            padding: 10px 0;
+        }
+        .menu-content a {
+            display: block;
+            padding: 10px 15px;
+            color: #444;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+        }
+        .menu-content a:last-child {
+            border-bottom: none;
+        }
+        .menu-content a:hover {
+            background: #e0e0e0;
+            color: black;
+        }
+        .search-container {
+            position: relative;
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .search-bar {
+            padding: 5px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding-right: 40px;
+        }
+        .clear-button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 5px 10px;
+            border: none;
+            background: #ff5555;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .suggestions {
+            display: none;
+            position: absolute;
+            border: 1px solid #ddd;
+            width: 300px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1;
+            background: white;
+            color: black;
+            top: 100%;
+            left: 0;
+        }
+        .suggestions.light-mode {
+            background: white;
+            color: black;
+        }
+        .suggestions.dark-mode {
+            background: #444;
+            color: white;
+        }
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestions div:hover {
+            background: #f0f0f0;
+        }
+        .dark-mode .suggestions div:hover {
+            background: #555;
+        }
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+        .lever {
+            width: 50px;
+            height: 50px;
+            background: #777; /* Fallback for missing image */
+            border-radius: 5px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .dark-mode .lever {
+            background: #4CAF50;
+        }
+        .links img {
+            width: 32px;
+            height: 32px;
+            margin-left: 10px;
+        }
+        .search-help {
+            background: #444;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .search-help:hover {
+            background: #555;
+        }
+        .dark-mode .search-help {
+            background: #4CAF50;
+        }
+
+        /* ===== Content Styles ===== */
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .shoutouts {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #4CAF50;
+        }
+        .dark-mode .shoutouts {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-left-color: #45a049;
+        }
+        .shoutouts h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 28px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .dark-mode .shoutouts h2 {
+            color: #ecf0f1;
+            border-bottom-color: #555;
+        }
+        .shoutouts p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .fan-highlight {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        .dark-mode .fan-highlight {
+            color: #ff7675;
+        }
+        .updates {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .dark-mode .updates {
+            background: #2c3e50;
+        }
+        .updates h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 28px;
+        }
+        .dark-mode .updates h2 {
+            color: #ecf0f1;
+        }
+        .updates ul {
+            padding-left: 20px;
+        }
+        .updates li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+            position: relative;
+            list-style-type: none;
+            padding-left: 25px;
+        }
+        .updates li:before {
+            content: "•";
+            color: #4CAF50;
+            font-size: 24px;
+            position: absolute;
+            left: 0;
+            top: -3px;
+        }
+        .update-highlight {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .dark-mode .update-highlight {
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="mooshrom_logo.png" alt="Mooshrom Logo">
+        </div>
+        <div class="menu">
+            <button onclick="toggleMenu()">Menu</button>
+            <div class="menu-content" id="menuContent">
+                <a href="MooshromGaming.html">Mooshrom Gaming</a>
+                <a href="/MooshromJR">MooshromJR</a>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="text" class="search-bar" id="searchBar" placeholder="Search (do /help for info on how to use)" autocomplete="off">
+            <button class="clear-button" onclick="clearSearch()">X</button>
+            <div class="suggestions" id="suggestions"></div>
+        </div>
+        <button class="search-help" onclick="window.location.href='search-help.html'">?</button>
+        <div class="links">
+            <a href="https://github.com/MooshroomGaming" target="_blank"><img src="github_logo.png" alt="GitHub"></a>
+            <a href="https://www.tiktok.com/@mooshromgaming09?_t=8jtFcP6yVos&_r=1" target="_blank"><img src="tiktok_logo.png" alt="TikTok"></a>
+            <a href="https://discord.com/invite/2wsEWRP583" target="_blank"><img src="discord_logo.png" alt="Discord"></a>
+            <a href="https://mooshromgaming-shop.fourthwall.com/" target="_blank"><img src="merch_logo.png" alt="Merch"></a>
+        </div>
+        <div class="toggle-switch" onclick="toggleDarkMode()">
+            <div class="lever">D/M</div>
+            <span>Dark Mode</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="shoutouts">
+            <h2>Shoutouts for Top Fans</h2>
+            <p>Feature your biggest supporters here!</p>
+            <p>Shoutout to our amazing fans: <span class="fan-highlight">NetRex</span><span class="fan-highlight"></span><span class="fan-highlight"></span>!</p>
+        </div>
+        <div class="updates">
+            <h2>Updates / News</h2>
+            <p>Latest updates about Mooshrom:</p>
+            <ul>
+                <li><span class="update-highlight">New video</span> on our channel!</li>
+                <li><span class="update-highlight">Check out</span> our latest merchandise!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Initialize dark mode from localStorage
+        function initializeDarkMode() {
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                const suggestions = document.getElementById('suggestions');
+                if (suggestions) {
+                    suggestions.classList.remove('light-mode');
+                    suggestions.classList.add('dark-mode');
+                }
+            }
+        }
+
+        // Menu Toggle
+        function toggleMenu() {
+            const menuContent = document.getElementById('menuContent');
+            menuContent.style.display = menuContent.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const suggestions = document.getElementById('suggestions');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                if (suggestions) {
+                    suggestions.classList.remove('light-mode');
+                    suggestions.classList.add('dark-mode');
+                }
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+                if (suggestions) {
+                    suggestions.classList.remove('dark-mode');
+                    suggestions.classList.add('light-mode');
+                }
+            }
+        }
+
+        // Search Functionality
+        async function showSuggestions(value) {
+            const suggestions = document.getElementById('suggestions');
+            if (!suggestions) return;
+            
+            suggestions.innerHTML = '';
+            
+            if (!value.trim()) {
+                suggestions.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch('search_data.json');
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                
+                const filtered = data.suggestions.filter(item => 
+                    item.title.toLowerCase().includes(value.toLowerCase())
+                ).slice(0, 5); // Only show 5 suggestions
+
+                if (filtered.length > 0) {
+                    filtered.forEach(item => {
+                        const div = document.createElement('div');
+                        div.textContent = item.title;
+                        div.onclick = () => {
+                            window.location.href = item.link;
+                        };
+                        suggestions.appendChild(div);
+                    });
+                    suggestions.style.display = 'block';
+                } else {
+                    suggestions.innerHTML = '<div>No results found</div>';
+                    suggestions.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                suggestions.innerHTML = '<div>Search unavailable</div>';
+                suggestions.style.display = 'block';
+            }
+        }
+
+        // Clear Search
+        function clearSearch() {
+            const searchBar = document.getElementById('searchBar');
+            const suggestions = document.getElementById('suggestions');
+            if (searchBar) searchBar.value = '';
+            if (suggestions) {
+                suggestions.innerHTML = '';
+                suggestions.style.display = 'none';
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeDarkMode();
+            
+            const searchBar = document.getElementById('searchBar');
+            if (searchBar) {
+                searchBar.addEventListener('input', (e) => showSuggestions(e.target.value));
+            }
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (event) => {
+            const menuContent = document.getElementById('menuContent');
+            if (menuContent && !event.target.closest('.menu')) {
+                menuContent.style.display = 'none';
+            }
+            
+            const suggestions = document.getElementById('suggestions');
+            const searchBar = document.getElementById('searchBar');
+            if (suggestions && searchBar && !event.target.closest('.search-container')) {
+                suggestions.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
